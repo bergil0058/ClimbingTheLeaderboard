@@ -17,28 +17,38 @@ namespace ClimbingTheLeaderboard
             List<int> iRanked = ranked.Distinct().ToList();
             int iPlayerLenght = player.Count;
             int iRankedLenght = iRanked.Count;
-            int j;
+            int j = 0;
 
             for (int i = 0; i < iPlayerLenght; i++) // De < a >
             {
-                int iScore = player[i];
                 int iResultItem;
+                int iScore = player[i];
                 if(iResultDic.ContainsKey(iScore))
                 {
                     iResultItem = iResultDic[iScore];
                 }
                 else
                 {
-                    j = 0;
-                    while (j < iRankedLenght && iRanked[j] > iScore) // De > a <
-                    {
-                        j++;
-                    }
-                    iResultItem = j + 1;
+                    iResultItem = GetPositionInRankedArray(iRanked, iRankedLenght, iScore, ref j);
                     iResultDic.Add(iScore, iResultItem);
                 }                
                 iRetVal.Add(iResultItem);
             }
+
+            return iRetVal;
+        }
+
+
+        private static int GetPositionInRankedArray(List<int> aRanked, int aRankedLenght, int aScore, ref int j)
+        {
+            int iRetVal;
+
+            // De < a > (der => izq)
+            while (j < aRankedLenght && aRanked[aRankedLenght - 1 - j] <= aScore)
+            {
+                j++;
+            }
+            iRetVal = aRankedLenght - j + 1;
 
             return iRetVal;
         }
